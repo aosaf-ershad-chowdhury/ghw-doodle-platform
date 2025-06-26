@@ -1,6 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 
-const CanvasComponent = () => {
+type CanvasProps = {
+  selectedColor: string;
+};
+
+const CanvasComponent : React.FC<CanvasProps> = ({ selectedColor }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasContext, setCanvasContext] =
@@ -19,11 +23,15 @@ const CanvasComponent = () => {
         ctx.strokeStyle = "#000";
         ctx.lineWidth = 5;
         setCanvasContext(ctx);
-        ctx.fillStyle = "#ffaa00";
-        ctx.fillRect(0, 10, 100, 100);
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (canvasContext) {
+      canvasContext.strokeStyle = selectedColor;
+    }
+  }, [canvasContext, selectedColor]);
 
   const getMouseCoordinates = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
